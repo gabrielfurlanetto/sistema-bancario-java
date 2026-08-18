@@ -27,6 +27,6 @@ public class Exercicio2 {
             System.out.println("O segundo número digitado é par!");
         }
         else   
-            System.out.println("O segundo número digitado é impar!");
+            System.out.println("O segundo número digitado é impar! KKKKKK");
     }
 }
