@@ -36,6 +36,7 @@ public class SistemaBancario {
                     break;
             
                 default:
+                    System.out.println("Opção Inválida");
                     break;
             } 
         } while (option != 0); 
