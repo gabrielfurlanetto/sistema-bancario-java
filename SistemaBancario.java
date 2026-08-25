@@ -3,76 +3,80 @@ import java.util.Scanner;
 public class SistemaBancario {
 
     public static void main (String[] args){
-
+        
         Scanner scanner = new Scanner(System.in);
-        double saldo = 100;
-        int option;
+        Banco banco = new Banco();
+        Menu menu = new Menu(scanner);
+        boolean programaRodando = true;
 
-        do {
-            System.out.println("\n\n===== BANCO =====\n");
-            System.out.println("1 - Consultar saldo");
-            System.out.println("2 - Depositar");
-            System.out.println("3 - Sacar");
+        while (programaRodando){
+            System.out.println("\n\n===== BANCO =====");
+            System.out.println("1 - Login");
+            System.out.println("2 - Criar Conta");
             System.out.println("0 - Sair");
+            int io = scanner.nextInt();
+            scanner.nextLine();
 
-            option = scanner.nextInt();
-
-
-            switch (option) {
+            switch (io) {
                 case 1:
-                    consultar(saldo);
-                    break;
-
-                case 2: 
-                    saldo = depositar(saldo,scanner);
+                    Login(scanner,menu,banco);
                     break;
                 
-                case 3: 
-                    saldo = sacar(saldo,scanner);
+                case 2:
+                    criaConta (scanner,banco);
                     break;
-
+                
                 case 0:
-                    System.out.println("Saindo do programa...");
+                    programaRodando = false;
                     break;
             
                 default:
-                    System.out.println("Opção Inválida");
+                    System.out.println("Opção inválida");
                     break;
-            } 
-        } while (option != 0); 
+            }
+        }
         scanner.close();
-    }
+    }  
 
-    public static void consultar(double saldo){
-        System.out.println("Seu saldo é de R$" + saldo);
-    }
 
-    public static double depositar(double saldo, Scanner scanner){
-        System.out.println("Qual valor você deseja guardar?");
-        double deposito = scanner.nextDouble();
-        if (deposito > 0){
-            System.out.println("Você depositou R$" + deposito);
-            saldo = saldo + deposito;
+    public static void Login(Scanner scanner, Menu menu, Banco banco){
+        Conta conta;
+        System.out.println("Digite seu Nome: ");
+        String nome = scanner.nextLine();
+        System.out.println("Digite sua senha: ");
+        String senha = scanner.nextLine();
+        conta = banco.buscaConta(nome,senha);
+        
+        if (conta!=null){
+            menu.executarMenu(conta);
         }
         else 
-            System.out.println("Valor inválido!");
-        return saldo;
+            System.out.println("Usuário ou senha Incorreto\n");
     }
 
-    public static double sacar(double saldo, Scanner scanner){
-        System.out.println("Qual valor você deseja retirar?");
-        double saque = scanner.nextDouble();
-        if (saque > 0){
-            if (saldo >= saque){
-                System.out.println("Você sacou R$" + saque);
-                saldo = saldo - saque;
+    public static void criaConta (Scanner scanner, Banco banco){
+        System.out.println("===== CRIANDO CONTA =====");
+        System.out.println("Digite seu Nome: ");
+        String nome = scanner.nextLine();
+        System.out.println("Digite sua senha: ");
+        String senha = scanner.nextLine();
+
+        System.out.println("Qual o saldo inicial? ");
+        double saldo = scanner.nextDouble();
+        
+        try {
+            Conta x = new Conta(nome, senha, saldo);
+
+            if (banco.adicionarConta(x)) {
+                System.out.println("Conta criada com sucesso!");
+            } else {
+                System.out.println("Já existe uma conta com este nome!");
             }
-            else 
-                System.out.println("Saldo insuficiente!");
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
-        else
-            System.out.println("Valor inválido!");
-        return saldo;
     }
 }
 
+
+                    
