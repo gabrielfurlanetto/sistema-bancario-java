@@ -1,72 +1,79 @@
+import java.util.ArrayList;
+
 public class Conta {
+
+    private ArrayList<Transacao> transacoes =  new ArrayList<>();
 
     private double saldo;
     private String nome;
     private String senha;
+    private final int numero;
 
-    public Conta() {
-        this.saldo = 0;
-        this.nome = "Sem nome";
-    }
-
-    public Conta(String nome, String senha, double saldo){
-
+    private void validarNome(String nome){
         if (nome.isBlank())
             throw new IllegalArgumentException("Nome não pode ser vazio");
+
         if (!nome.matches("[\\p{L}\\s]+"))
-            throw new IllegalArgumentException("Deve conter apenas letras e espaços");
+            throw new IllegalArgumentException("Nome deve conter apenas letras e espaços");
+    }
 
-        if (saldo < 0) 
-            throw new IllegalArgumentException("Saldo inválido");
-
+    private void validarSenha(String senha){
         if (senha.length()<6)
             throw new IllegalArgumentException("Sua senha deve ter pelo menos 6 caracteres");
         if (!senha.matches("[\\p{L}\\d@#!*]+"))
             throw new IllegalArgumentException("Sua senha pode conter apenas letras, números e caracteres esp.(@#!*");
+    }
+
+    private void validarSaldo(double saldo){
+        if (saldo < 0) 
+            throw new IllegalArgumentException("Saldo inválido");
+    }
+
+    public Conta(int numero, String nome, String senha, double saldo){
+
+        validarNome(nome);
+        validarSenha(senha);
+        validarSaldo(saldo);
 
         this.nome=nome;
         this.senha=senha;
         this.saldo=saldo;
+        this.numero=numero;
     }    
 
-    
-
-    public Conta(String nome, double saldo) {
-
-    this.nome = nome;
-
-    if (saldo >= 0) {
-        this.saldo = saldo;
-    } 
-    else {
-        this.saldo = 0;
-        System.out.println("Saldo inicial inválido. Conta criada com saldo R$0.");
-        }
-    }
-
-    public Conta(double saldo) {
-        this.saldo = saldo;
-    }
-
-    public void depositar(double valor) {
+    public boolean creditar(double valor) {
         if (valor > 0) {
             saldo = saldo + valor;
+            Transacao transacao = new Transacao(
+                TipoTransacao.DEPOSITO,
+                valor,
+                nome,
+                numero
+            );
+            registrarTransacao(transacao);
+            return true;
         } else {
-            System.out.println("Valor inválido!");
+            return false;
         }
     }
 
-    public void sacar(double valor) {
-        if (valor > 0) {
-            if (saldo >= valor) {
+    public boolean debitar(double valor){
+        if (valor > 0 && saldo >= valor) {
                 saldo = saldo - valor;
-                System.out.println("Você sacou R$" + valor);
-            } else {
-                System.out.println("Saldo insuficiente!");
-            }
-        } else {
-            System.out.println("Valor inválido!");
+                Transacao transacao = new Transacao(
+                    TipoTransacao.SAQUE,
+                    valor,
+                    nome,
+                    numero
+                );
+                registrarTransacao(transacao);
+                return true;
         }
+        else return false;
+    }
+
+    private void registrarTransacao(Transacao transacao) {
+        transacoes.add(transacao);
     }
 
     public String getNome(){
@@ -77,7 +84,34 @@ public class Conta {
         return saldo;
     }
 
+    public int getNumero(){
+        return numero;
+    }
+
     public boolean verificaSenha(String senhaDigitada){
         return senhaDigitada.equals(senha);
+    }
+
+    public void adicionarTransacao(Transacao transacao) {
+        registrarTransacao(transacao);
+    }
+
+    public void imprimeExtrato() {
+        for (Transacao transacao : transacoes) {
+            transacao.imprimeTransacao();
+        }
+    }
+
+    public boolean debitarTransferencia(double valor) {
+        if (valor > 0 && saldo >= valor) {
+            saldo -= valor;
+            return true;
+        }
+
+        return false;
+    }
+
+    public void creditarTransferencia(double valor) {
+        saldo += valor;
     }
 }
