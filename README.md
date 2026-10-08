@@ -48,3 +48,11 @@ git clone https://github.com/gabrielfurlanetto/sistema-bancario-java.git
 cd sistema-bancario-java
 javac *.java
 java SistemaBancario
+```
+
+## Próximos passos
+
+- Melhorar o tratamento de entradas inválidas
+- Implementar persistência dos dados
+- Carregar as contas ao iniciar o sistema
+- Melhorar o menu
