@@ -5,18 +5,28 @@ public class SistemaBancario {
     public static void main (String[] args){
     
         Scanner scanner = new Scanner(System.in);
+        LeitorEntrada leitor = new LeitorEntrada();
         Banco banco = new Banco();
-        Menu menu = new Menu(scanner,banco);
+        Menu menu = new Menu(scanner, banco, leitor);
         Autenticacao autenticacao = new Autenticacao(banco);
         boolean programaRodando = true;
 
         while (programaRodando){
-            System.out.println("\n\n===== BANCO =====");
-            System.out.println("1 - Login");
-            System.out.println("2 - Criar Conta");
-            System.out.println("0 - Sair");
-            int io = scanner.nextInt();
-            scanner.nextLine();
+
+            int io;
+
+            do {
+                System.out.println("\n\n===== BANCO =====");
+                System.out.println("1 - Login");
+                System.out.println("2 - Criar Conta");
+                System.out.println("0 - Sair");
+
+                io = leitor.lerInt(scanner);
+                if (io < 0 || io > 2){
+                    System.out.println("Opção inválida!");
+                }
+
+            } while (io < 0 || io > 2);
 
             switch (io) {
                 case 1:
@@ -78,8 +88,5 @@ public class SistemaBancario {
         } else {
             System.out.println("Falha no login");
         }
+    }
 }
-}
-
-
-                    

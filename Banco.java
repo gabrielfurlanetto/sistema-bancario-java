@@ -43,6 +43,11 @@ public class Banco {
 
     public boolean transferir(Conta origem, Conta destino, double valor) {
 
+        if (origem.getNumero() == destino.getNumero()) {
+            System.out.println("Não é possível transferir para a própria conta.");
+            return false;
+        }
+
         if (!origem.debitarTransferencia(valor)) {
             return false;
         }

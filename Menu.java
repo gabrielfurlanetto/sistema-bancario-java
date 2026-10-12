@@ -4,10 +4,12 @@ public class Menu {
 
     private Scanner scanner;
     private Banco banco;
-
-    public Menu(Scanner scanner, Banco banco) {
+    private LeitorEntrada leitor;
+    
+    public Menu(Scanner scanner, Banco banco, LeitorEntrada leitor) {
         this.scanner = scanner;
         this.banco = banco;
+        this.leitor = leitor;
     }
     public void executarMenu(Conta conta){
 
@@ -24,8 +26,7 @@ public class Menu {
             System.out.println("5 - Extrato Bancário");
             System.out.println("0 - Sair");
             
-            option = scanner.nextInt();
-            scanner.nextLine();
+            option = leitor.lerInt(scanner);
 
             switch (option) {
                 case 1:
@@ -34,7 +35,7 @@ public class Menu {
 
                 case 2:
                     System.out.println("Qual valor deseja depositar?");
-                    valor = scanner.nextDouble();
+                    valor = leitor.lerDouble(scanner);
                     if(conta.creditar(valor)){
                         System.out.println("Deposito realizado com sucesso");
                     }
@@ -45,7 +46,7 @@ public class Menu {
                 
                 case 3:
                     System.out.println("Qual valor deseja sacar?");
-                    valor = scanner.nextDouble();
+                    valor = leitor.lerDouble(scanner);
                     if (conta.debitar(valor)){
                         System.out.println("Você sacou R$" + valor);
                     }
@@ -56,14 +57,12 @@ public class Menu {
 
                 case 4:
                     System.out.println("Número da conta destino: "); 
-                    int numeroConta = scanner.nextInt();
-                    scanner.nextLine();
+                    int numeroConta = leitor.lerInt(scanner);
                     Conta conta2 = banco.buscaContaNumero(numeroConta); //estou aqui 
                     if (conta2 == null) System.out.println("Numero da conta destinatário incorreto!");
                     else{
                         System.out.println("Qual o valor desejas transferir?");
-                        valor = scanner.nextDouble();
-                        scanner.nextLine();
+                        valor = leitor.lerDouble(scanner);
                         if(banco.transferir(conta,conta2,valor)){
                             System.out.println("Transferência realizada com sucesso");
                         }
