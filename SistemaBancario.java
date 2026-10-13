@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class SistemaBancario {
@@ -6,10 +7,13 @@ public class SistemaBancario {
     
         Scanner scanner = new Scanner(System.in);
         LeitorEntrada leitor = new LeitorEntrada();
-        Banco banco = new Banco();
-        Menu menu = new Menu(scanner, banco, leitor);
+        PersistenciaContas persistencia = new PersistenciaContas();
+        ArrayList<Conta> contas = persistencia.carregarContas();
+        Banco banco = new Banco(contas);
+        Menu menu = new Menu(scanner, banco, leitor, persistencia);
         Autenticacao autenticacao = new Autenticacao(banco);
         boolean programaRodando = true;
+
 
         while (programaRodando){
 
@@ -35,6 +39,7 @@ public class SistemaBancario {
                 
                 case 2:
                     criaConta (scanner,banco);
+                    persistencia.salvarContas(banco.getContas());
                     break;
                 
                 case 0:

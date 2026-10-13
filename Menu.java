@@ -1,15 +1,17 @@
 import java.util.Scanner;
 
 public class Menu {
-
+    
     private Scanner scanner;
     private Banco banco;
     private LeitorEntrada leitor;
+    private PersistenciaContas persist;
     
-    public Menu(Scanner scanner, Banco banco, LeitorEntrada leitor) {
+    public Menu(Scanner scanner, Banco banco, LeitorEntrada leitor, PersistenciaContas persist) {
         this.scanner = scanner;
         this.banco = banco;
         this.leitor = leitor;
+        this.persist = persist;
     }
     public void executarMenu(Conta conta){
 
@@ -38,6 +40,7 @@ public class Menu {
                     valor = leitor.lerDouble(scanner);
                     if(conta.creditar(valor)){
                         System.out.println("Deposito realizado com sucesso");
+                        persist.salvarContas(banco.getContas());         
                     }
                     else{
                         System.out.println("Falha na tentativa de depósito");
@@ -49,6 +52,7 @@ public class Menu {
                     valor = leitor.lerDouble(scanner);
                     if (conta.debitar(valor)){
                         System.out.println("Você sacou R$" + valor);
+                        persist.salvarContas(banco.getContas());
                     }
                     else{
                         System.out.println("Não foi possível realizar o saque.");
@@ -58,13 +62,14 @@ public class Menu {
                 case 4:
                     System.out.println("Número da conta destino: "); 
                     int numeroConta = leitor.lerInt(scanner);
-                    Conta conta2 = banco.buscaContaNumero(numeroConta); //estou aqui 
+                    Conta conta2 = banco.buscaContaNumero(numeroConta); 
                     if (conta2 == null) System.out.println("Numero da conta destinatário incorreto!");
                     else{
                         System.out.println("Qual o valor desejas transferir?");
                         valor = leitor.lerDouble(scanner);
                         if(banco.transferir(conta,conta2,valor)){
                             System.out.println("Transferência realizada com sucesso");
+                            persist.salvarContas(banco.getContas());
                         }
                         else {
                             System.out.println("Falha na transferência");

@@ -88,6 +88,10 @@ public class Conta {
         return numero;
     }
 
+    public String getSenha(){
+        return senha;
+    }
+
     public boolean verificaSenha(String senhaDigitada){
         return senhaDigitada.equals(senha);
     }

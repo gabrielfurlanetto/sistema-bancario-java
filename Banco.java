@@ -4,10 +4,24 @@ public class Banco {
 
     private ArrayList<Conta> contas;
 
+    public ArrayList<Conta> getContas(){
+        return new ArrayList<>(contas); //Está devolvendo uma cópia da lista
+    }                                   //Assim outra classe não consegue alterar a lista original
+
     private int proximoNumeroConta = 100001;
 
     public Banco() {
         contas = new ArrayList<>();
+    }
+
+    public Banco(ArrayList<Conta> contas) {
+        this.contas = contas;
+
+        for (Conta conta : contas){
+            if (conta.getNumero() >= proximoNumeroConta) {
+                this.proximoNumeroConta = conta.getNumero() + 1;
+            }   
+        }
     }
 
     public Conta buscaContaNumero(int numeroConta){
