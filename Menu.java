@@ -6,12 +6,14 @@ public class Menu {
     private Banco banco;
     private LeitorEntrada leitor;
     private PersistenciaContas persist;
+    private ServicoBancario servicoBancario;
     
-    public Menu(Scanner scanner, Banco banco, LeitorEntrada leitor, PersistenciaContas persist) {
+    public Menu(Scanner scanner, Banco banco, LeitorEntrada leitor, PersistenciaContas persist, ServicoBancario servicoBancario) {
         this.scanner = scanner;
         this.banco = banco;
         this.leitor = leitor;
         this.persist = persist;
+        this.servicoBancario = servicoBancario;
     }
     public void executarMenu(Conta conta){
 
@@ -38,7 +40,7 @@ public class Menu {
                 case 2:
                     System.out.println("Qual valor deseja depositar?");
                     valor = leitor.lerDouble(scanner);
-                    if(conta.creditar(valor)){
+                    if(servicoBancario.depositar(conta, valor)){
                         System.out.println("Deposito realizado com sucesso");
                         persist.salvarContas(banco.getContas());         
                     }
@@ -50,7 +52,7 @@ public class Menu {
                 case 3:
                     System.out.println("Qual valor deseja sacar?");
                     valor = leitor.lerDouble(scanner);
-                    if (conta.debitar(valor)){
+                    if (servicoBancario.sacar(conta, valor)){
                         System.out.println("Você sacou R$" + valor);
                         persist.salvarContas(banco.getContas());
                     }
@@ -67,7 +69,7 @@ public class Menu {
                     else{
                         System.out.println("Qual o valor desejas transferir?");
                         valor = leitor.lerDouble(scanner);
-                        if(banco.transferir(conta,conta2,valor)){
+                        if(servicoBancario.transferir(conta, conta2, valor)){
                             System.out.println("Transferência realizada com sucesso");
                             persist.salvarContas(banco.getContas());
                         }

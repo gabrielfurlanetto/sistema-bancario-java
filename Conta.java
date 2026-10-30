@@ -25,7 +25,7 @@ public class Conta {
     }
 
     private void validarSaldo(double saldo){
-        if (saldo < 0) 
+        if (saldo < 0 || !Double.isFinite(saldo)) 
             throw new IllegalArgumentException("Saldo inválido");
     }
 
@@ -70,6 +70,14 @@ public class Conta {
                 return true;
         }
         else return false;
+    }
+
+    public Transacao getUltimaTransacao() {
+        if (transacoes.isEmpty()) {
+            return null;
+        }
+
+        return transacoes.get(transacoes.size() - 1);
     }
 
     private void registrarTransacao(Transacao transacao) {

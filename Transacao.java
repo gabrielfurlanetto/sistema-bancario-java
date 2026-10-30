@@ -21,6 +21,14 @@ public class Transacao {
         this.data = LocalDateTime.now();
     }
 
+    public Transacao(TipoTransacao tipo, double valor, String pessoa, int numeroConta, LocalDateTime data) {
+        this.tipo = tipo;
+        this.valor = valor;
+        this.pessoa = pessoa;
+        this.numeroConta = numeroConta;
+        this.data = data;
+    }
+
     public LocalDateTime getData() {
         return data;
     }

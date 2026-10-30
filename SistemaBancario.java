@@ -9,8 +9,17 @@ public class SistemaBancario {
         LeitorEntrada leitor = new LeitorEntrada();
         PersistenciaContas persistencia = new PersistenciaContas();
         ArrayList<Conta> contas = persistencia.carregarContas();
+        PersistenciaTransacao persistenciaTransacao = new PersistenciaTransacao();
+        for (Conta conta : contas) {
+            ArrayList<Transacao> transacoes = persistenciaTransacao.carregarTransacoes(conta.getNumero());
+
+            for (Transacao transacao : transacoes) {
+                conta.adicionarTransacao(transacao);
+            }
+        }
         Banco banco = new Banco(contas);
-        Menu menu = new Menu(scanner, banco, leitor, persistencia);
+        ServicoBancario servicoBancario = new ServicoBancario(banco);
+        Menu menu = new Menu(scanner, banco, leitor, persistencia, servicoBancario);
         Autenticacao autenticacao = new Autenticacao(banco);
         boolean programaRodando = true;
 
@@ -38,7 +47,7 @@ public class SistemaBancario {
                     break;
                 
                 case 2:
-                    criaConta (scanner,banco);
+                    criaConta (scanner,banco,leitor);
                     persistencia.salvarContas(banco.getContas());
                     break;
                 
@@ -55,7 +64,7 @@ public class SistemaBancario {
     }  
 
 
-    public static void criaConta(Scanner scanner, Banco banco){
+    public static void criaConta(Scanner scanner, Banco banco, LeitorEntrada leitor){
         System.out.println("===== CRIANDO CONTA =====");
         System.out.println("Digite seu Nome: ");
         String nome = scanner.nextLine();
@@ -64,8 +73,7 @@ public class SistemaBancario {
         String senha = scanner.nextLine();
 
         System.out.println("Qual o saldo inicial? ");
-        double saldo = scanner.nextDouble();
-        scanner.nextLine();
+        double saldo = leitor.lerDouble(scanner);
         
         try {
             if (banco.adicionarConta(nome, senha, saldo)) {
